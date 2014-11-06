@@ -1,0 +1,29 @@
+{
+    "name": "blastn-test-%DATESTAMP",
+    "appId": "ncbi-blastn-2.2.29u5",
+    "queue": "normal",
+    "nodeCount": 1,
+    "maxMemoryPerNode": 1,
+    "processorsPerNode": 1,
+    "requestedTime": "00:30:00",
+    "archive": false,
+    "archivePath": "%USERNAME/archive/jobs/blastn-test-%DATESTAMP",
+    "archiveSystem": "araport-storage-00",
+    "notifications": [{
+         "url":"%EMAIL",
+         "event":"FINISHED",
+         "persistent":false
+      }],
+    "parameters" : {
+    	"database": "TAIR10_cdna_20101214_updated TAIR10_cds_20101214_updated",
+    	"evalue": 0.001,
+    	"format":"HTML",
+    	"ungapped":false,
+    	"matrix":"BLOSUM62",
+    	"filter":true,
+    	"lowercase_masking":false
+    },
+    "inputs": {
+		"query": "agave://araport-storage-00/public_files/test.nt.fa"
+    }
+}

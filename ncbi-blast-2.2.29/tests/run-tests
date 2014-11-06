@@ -1,0 +1,77 @@
+#!/bin/bash
+
+darwin=false;
+case "`uname`" in
+  Darwin*) darwin=true ;;
+esac
+
+if $darwin; then
+  sedi="sed -i .bak"
+else
+  sedi="sed -i"
+fi
+
+echo -e "\nWe will test auth, data, and job life cycle for the AIP tenant:\n"
+echo -e "Before running this script, please install the Agave CLI"
+echo -e "and make it available in your PATH. Then, select the AIP tenant.\n"
+echo -e "tenants-init --tenant araport.org --backup\n"
+
+default="Yes"
+read -p "Have you completed the previous setups? [$default]: " READY
+READY=${READY:-$default}
+if [ "$READY" != "Yes" ]; then exit 1; fi
+
+echo -e "\nPlease answer the following questions:\n"
+
+default=""
+read -p "What AIP user account will are you testing [$default]? " USERNAME
+USERNAME=${USERNAME:-$default}
+echo "OK: AIP user account is $USERNAME"
+
+default=""
+echo "What is the password for $USERNAME?"
+read -s PASSWORD
+PASSWORD=${PASSWORD:-$default}
+echo "(Thank you)"
+
+default="araport_cli_test"
+read -p "Preferred OAuth2 client name for $USERNAME [$default]? " CLIENT
+CLIENT=${CLIENT:-$default}
+echo "OK: OAuth2 client is $CLIENT"
+
+default="null@devnull.com"
+read -p "Email address for notifications [$default]: " EMAIL
+EMAIL=${EMAIL:-$default}
+echo "OK: Notifications to $EMAIL"
+
+echo -e "\nConfiguring credentials...\nHit [Enter] twice when asked for API secret/key.\n"
+
+set -e
+clients-create -f -S -u $USERNAME -p $PASSWORD -N $CLIENT
+auth-tokens-create -f -S -u $USERNAME -p $PASSWORD
+sleep 2
+
+# Create a date stamp to ensure the system name is fairly unique
+DATESTAMP=$(date +%m%d%Y-%k%M)
+DATEFILTER=$(date +%Y-%m-%d)
+
+echo -e "\nCreating and submitting jobs..."
+
+for F in templates/*jsonx
+do
+BN=$(basename $F .jsonx)
+cp $F "$BN.json" && chmod 600 $BN.json
+# Find/replace on macros
+$sedi "s/%USERNAME/$USERNAME/g" $BN.json
+$sedi "s/%EMAIL/$EMAIL/g" $BN.json
+$sedi "s/%DATESTAMP/$DATESTAMP/g" $BN.json
+echo -e "\tJob $BN"
+jobs-submit -q -F "$BN.json"
+sleep 2
+done
+set +e
+
+rm -rf *.bak
+
+echo -e "\nHere is a listing of your jobs:\n"
+jobs-list

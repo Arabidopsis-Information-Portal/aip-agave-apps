@@ -1,0 +1,27 @@
+{
+    "name": "tblastn-test-09162014-1339",
+    "appId": "ncbi-tblastn-2.2.29u3",
+    "queue": "normal",
+    "nodeCount": 1,
+    "maxMemoryPerNode": 1,
+    "processorsPerNode": 1,
+    "requestedTime": "00:30:00",
+    "archive": false,
+    "archivePath": "vaughn/archive/jobs/tblastn-test-09162014-1339",
+    "archiveSystem": "araport-storage-00",
+    "notifications": [{
+         "url":"matt.vaughn@gmail.com",
+         "event":"FINISHED",
+         "persistent":false
+      }],
+    "parameters" : {
+    	"database": "TAIR10_cdna_20101214_updated TAIR10_cds_20101214_updated",
+    	"evalue": 0.001,
+    	"format":"HTML",
+    	"matrix":"BLOSUM62",
+    	"filter":true
+    },
+    "inputs": {
+		"query": "agave://araport-storage-00/public_files/test.pep.fa"
+    }
+}

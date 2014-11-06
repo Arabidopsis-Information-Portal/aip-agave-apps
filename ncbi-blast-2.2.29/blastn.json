@@ -1,0 +1,336 @@
+{
+   "name":"ncbi-blastn",
+   "parallelism":"SERIAL",
+   "version":"2.2.29",
+   "helpURI":"http://www.ncbi.nlm.nih.gov/books/NBK1763/",
+   "label":"NCBI BLAST+ 2.2.29 blastn",
+   "shortDescription":"BLASTN compares nucleotide query to a nucleotide database",
+   "longDescription":"",
+   "defaultMemory": 1,
+   "defaultProcessors": 1,
+   "defaultQueue": "normal",
+   "deploymentPath":"vaughn/apps/ncbi-blast-2.2.29",
+   "deploymentSystem":"araport-storage-00",
+   "executionSystem":"araport-compute-00",
+   "executionType":"CLI",
+   "templatePath":"blastn.sh",
+   "testPath":"test.sh",
+   "checkpointable":false,
+   "modules":[],
+   "tags":[
+      "blast",
+      "sequence",
+      "similarity"
+   ],
+   "ontology":["http://sswapmeet.sswap.info/agave/apps/Application"],
+   "inputs":[
+	  {
+         "id":"query",
+         "value": {
+         	"default":"agave://araport-storage-00/public_files/fwa.nt.fa",
+            "type":"string",
+            "validator":"",
+            "visible":true,
+            "required":true
+         },
+         "details":{
+            "label":"Query sequence file",
+            "description":"Contains one or more query sequences in FASTA format"
+         },
+         "semantics":{
+           "ontology":[
+               "http://sswapmeet.sswap.info/mime/application/X-fasta"
+            ],
+            "fileTypes":[
+               "fasta-0", "text-0", "raw-0"
+            ]
+         }
+      }
+   ],
+   "parameters":[
+     {
+         "id":"database",
+         "value":{
+            "defaultValue":"TAIR10_cdna_20101214_updated",
+            "type":"string",
+            "visible":true,
+            "required":true
+         },
+         "details":{
+            "label":"BLAST database name",
+            "description":"",
+            "argument":"-db ",
+            "showArgument":false
+         },
+         "semantics":{
+            "ontology":[
+               "xs:string"
+            ]
+         }
+      },
+      {
+         "id":"format",
+         "value":{
+            "defaultValue":"HTML",
+            "validator":"HTML|TEXT|XML|TABULAR|TABULAR_COMMENTED|ASN1",
+            "type":"string",
+            "visible":true,
+            "required":false
+         },
+         "details":{
+            "label":"Alignment view format",
+            "description":"",
+            "argument":"",
+            "showArgument":false
+         },
+         "semantics":{
+            "ontology":[
+               "xs:integer"
+            ]
+         }
+      },
+	  {
+         "id":"gapopen",
+         "value":{
+            "defaultValue":"",
+            "type":"number",
+            "validator":"",
+            "visible":true,
+            "required":false
+         },
+         "details":{
+            "label":"Cost to open a gap",
+            "description":"Leave blank to use default value for algorithm",
+            "argument":"-gapopen ",
+            "showArgument":true
+         },
+         "semantics":{
+            "ontology":[
+               "xs:int"
+            ]
+         }
+      },      
+ 	  {
+         "id":"gapextend",
+         "value":{
+            "defaultValue":"",
+            "type":"number",
+            "validator":"",
+            "visible":true,
+            "required":false
+         },
+         "details":{
+            "label":"Cost to extend a gap",
+            "description":"Leave blank to use default value for algorithm",
+            "argument":"-gapextend ",
+            "showArgument":true
+         },
+         "semantics":{
+            "ontology":[
+               "xs:int"
+            ]
+         }
+      },     
+  	  {
+         "id":"penalty",
+         "value":{
+            "defaultValue":-3,
+            "type":"number",
+            "validator":"",
+            "visible":true,
+            "required":false
+         },
+         "details":{
+            "label":"Penalty for a nucleotide mismatch",
+            "description":"",
+            "argument":"-penalty ",
+            "showArgument":true
+         },
+         "semantics":{
+            "ontology":[
+               "xs:int"
+            ]
+         }
+      },
+  	  {
+         "id":"reward",
+         "value":{
+            "defaultValue":1,
+            "type":"number",
+            "validator":"",
+            "visible":true,
+            "required":false
+         },
+         "details":{
+            "label":"Reward for a nucleotide match",
+            "description":"",
+            "argument":"-reward ",
+            "showArgument":true
+         },
+         "semantics":{
+            "ontology":[
+               "xs:int"
+            ]
+         }
+      },
+  	  {
+         "id":"ungapped",
+         "value":{
+            "defaultValue":false,
+            "type":"flag",
+            "visible":true,
+            "required":false
+         },
+         "details":{
+            "label":"Perform ungapped alignment only?",
+            "description":"",
+            "argument":"-ungapped ",
+            "showArgument":true
+         },
+         "semantics":{
+            "ontology":[
+               "xs:int"
+            ]
+         }
+      },
+  	  {
+         "id":"matrix",
+         "value":{
+            "default":"BLOSUM62",
+            "type":"string",
+			"validator":"BLOSUM45|BLOSUM50|BLOSUM62|BLOSUM80|BLOSUM90|PAM30|PAM70|PAM250",
+            "visible":true,
+            "required":false
+         },
+         "details":{
+            "label":"Scoring matrix name",
+            "description":"(Ignored by nucleotide BLAST algorithms)",
+            "argument":"-matrix ",
+            "showArgument":true
+         },
+         "semantics":{
+            "ontology":[
+               "xs:int"
+            ]
+         }
+      },
+  	  {
+         "id":"evalue",
+         "value":{
+            "defaultValue":10,
+            "type":"number",
+            "validator":"",
+            "visible":true,
+            "required":false
+         },
+         "details":{
+            "label":"Expectation value (E) threshold for saving hits",
+            "description":"",
+            "argument":"-evalue ",
+            "showArgument":true
+         },
+         "semantics":{
+            "ontology":[
+               "xs:double"
+            ]
+         }
+      },
+      {
+         "id":"wordsize",
+         "value":{
+            "defaultValue":"",
+            "type":"number",
+            "validator":"",
+            "visible":true,
+            "required":false
+         },
+         "details":{
+            "label":"Word size for wordfinder algorithm",
+            "description":"Leave blank to use default value for algorithm",
+            "argument":"-word_size ",
+            "showArgument":true
+         },
+         "semantics":{
+            "ontology":[
+               "xs:int"
+            ]
+         }
+      },
+	  {
+         "id":"max_target_seqs",
+         "value":{
+            "default":500,
+            "type":"number",
+            "validator":"",
+            "visible":true,
+            "required":false
+         },
+         "details":{
+            "label":"Maximum number of aligned sequences to keep",
+            "description":"Not valid for outformat <= 4",
+            "argument":"-max_target_seqs ",
+            "showArgument":true
+         },
+         "semantics":{
+            "ontology":[
+               "xs:int"
+            ]
+         }
+      },
+	  {
+         "id":"filter",
+         "value":{
+            "default":true,
+            "type":"flag",
+            "validator":"",
+            "visible":true,
+            "required":false
+         },
+         "details":{
+            "label":"Filter query sequence(s)",
+            "description":"Filtering masks off segments of the query sequence that have low compositional complexity. DUST for blastn, SEG for others.",
+            "argument":"-dust yes ",
+            "showArgument":true
+         },
+         "semantics":{
+            "ontology":[
+               "xs:boolean"
+            ]
+         }
+      },{
+         "id":"lowercase_masking",
+         "value":{
+            "default":false,
+            "type":"flag",
+            "validator":"",
+            "visible":true,
+            "required":false
+         },
+         "details":{
+            "label":"Use lower case filtering in query and subject sequence(s)",
+            "description":"",
+            "argument":"-lcase_masking ",
+            "showArgument":true
+         },
+         "semantics":{
+            "ontology":[
+               "xs:boolean"
+            ]
+         }
+      }      
+      ],
+"outputs":[
+ {"id":"blast_out",
+     "value":
+        {"default":"blastn_out",
+         "validator":""},
+     "details":
+        {"label":"BLASTN output",
+         "description":"BLAST alignment file"},
+     "semantics":
+        {"ontology":["http://sswapmeet.sswap.info/mime/text/_"],
+         "minCardinality":"1",
+         "maxCardinality":"1",
+         "fileType":"Text-0"}}
+]
+}
